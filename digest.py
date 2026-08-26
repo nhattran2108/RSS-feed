@@ -50,6 +50,7 @@ STATE_TTL_DAYS = 14
 USER_AGENT = "Mozilla/5.0 (compatible; DailyRSSDigest/1.0; RSS reader)"
 TAG_RE = re.compile(r"<[^>]+>")
 WS_RE = re.compile(r"\s+")
+IMG_SRC_RE = re.compile(r'<img[^>]+src=["\']([^"\']+)["\']', re.I)
 
 LANG_BADGE = {"ja": ("JP", "#d94f4f"), "en": ("EN", "#2f6fd0")}
 
@@ -83,6 +84,29 @@ def clean_text(raw: str, limit: int | None = None) -> str:
     if limit and len(txt) > limit:
         txt = txt[:limit].rstrip() + "…"
     return txt
+
+
+def entry_image(entry) -> str:
+    """Tìm ảnh đại diện của bài: media:thumbnail/content, enclosure, hoặc <img> đầu tiên."""
+    for key in ("media_thumbnail", "media_content"):
+        media = entry.get(key)
+        if media and isinstance(media, list):
+            url = media[0].get("url")
+            if url:
+                return url
+    for link in entry.get("links", []) or []:
+        if link.get("rel") == "enclosure" and str(link.get("type", "")).startswith("image"):
+            if link.get("href"):
+                return link["href"]
+    for key in ("content", "summary", "description"):
+        val = entry.get(key)
+        if isinstance(val, list) and val:
+            val = val[0].get("value", "")
+        if isinstance(val, str):
+            m = IMG_SRC_RE.search(val)
+            if m:
+                return m.group(1)
+    return ""
 
 
 def canonical_link(link: str) -> str:
@@ -215,6 +239,7 @@ def collect(cfg: dict, hours: int, use_state: bool) -> tuple[list[dict], dict, l
                     "source": feed_cfg["name"],
                     "lang": feed_cfg.get("lang", "en"),
                     "published": published,
+                    "image": entry_image(entry),
                 })
                 kept += 1
 

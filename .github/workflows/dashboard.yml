@@ -1,0 +1,56 @@
+name: Build RSS Dashboard
+
+on:
+  schedule:
+    # Mỗi 5 giờ (theo UTC). GitHub có thể trễ vài phút khi hệ thống bận.
+    - cron: "0 */5 * * *"
+  workflow_dispatch:        # cho phép bấm chạy tay
+  push:
+    branches: [main]        # build lại khi bạn sửa feeds.yaml / dashboard.py
+    paths:
+      - "feeds.yaml"
+      - "dashboard.py"
+      - "digest.py"
+      - ".github/workflows/dashboard.yml"
+
+# Quyền tối thiểu để deploy lên GitHub Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      # Tạo trang tĩnh vào thư mục public/ (index.html cho GitHub Pages).
+      - name: Dựng dashboard
+        run: python dashboard.py --hours 48 --out public/index.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

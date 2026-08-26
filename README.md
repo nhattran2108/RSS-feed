@@ -4,12 +4,34 @@ Gom tin từ ~38 nguồn RSS (tiếng Nhật + tiếng Anh) theo 5 chủ đề �
 
 ```
 digest.py          Script chính: đọc RSS → lọc → dựng email → gửi SMTP
+dashboard.py       Dựng trang web kiểu RSS.app để "overview" nhanh (không gửi mail)
 feeds.yaml         Danh sách nguồn + cấu hình (chỉ cần sửa file này)
 check_feeds.py     Kiểm tra nguồn nào còn sống
 export_opml.py     Xuất feeds.opml để import vào Inoreader/Feedly
 requirements.txt   feedparser (BSD-2), PyYAML (MIT) — đều không copyleft
-.github/workflows/daily-digest.yml   Lịch chạy tự động
+.github/workflows/daily-digest.yml   Gửi email hằng ngày
+.github/workflows/dashboard.yml      Dựng + deploy dashboard lên GitHub Pages mỗi 5h
 ```
+
+---
+
+## 0. Dashboard web kiểu RSS.app (không cần email)
+
+```bash
+pip install -r requirements.txt
+python dashboard.py --open        # tạo dashboard.html + mở trên trình duyệt
+python dashboard.py --hours 72    # nới cửa sổ thời gian
+```
+
+Trang tĩnh, lọc hoàn toàn ở trình duyệt (không cần server): tab **EN / JP**, chip
+theo chủ đề, lọc theo nguồn, tìm kiếm tức thì (`/` để tìm), sáng/tối, mật độ
+thoáng/gọn, sắp xếp mới nhất/theo nguồn, xem danh sách/theo chủ đề, đánh dấu
+**MỚI** so với lần xem trước và lưu bài **★** (nhớ bằng `localStorage`). Có thể
+"Add to Home Screen" như một app (PWA).
+
+**Đưa lên mạng miễn phí (GitHub Pages):** sau khi push, vào **Settings → Pages →
+Source: GitHub Actions**. Workflow `dashboard.yml` tự dựng lại và deploy **mỗi 5
+giờ**. URL: `https://<user>.github.io/<repo>/`.
 
 ---
 

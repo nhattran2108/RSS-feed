@@ -2,6 +2,11 @@
 .state/
 seen.json
 preview.html
+dashboard.html
+manifest.webmanifest
+sw.js
+icon.svg
+public/
 digest.log
 
 # Secrets — never commit these
