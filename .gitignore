@@ -1,0 +1,15 @@
+# Runtime / generated artifacts
+.state/
+seen.json
+preview.html
+digest.log
+
+# Secrets — never commit these
+.env
+*.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/

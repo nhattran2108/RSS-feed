@@ -1,0 +1,4 @@
+# feedparser — BSD 2-Clause (cho phép dùng thương mại, không copyleft)
+feedparser>=6.0.11
+# PyYAML — MIT
+PyYAML>=6.0

@@ -1,0 +1,170 @@
+# =============================================================
+#  Cấu hình nguồn RSS cho bản tin hằng ngày
+#  Sửa file này để thêm/bớt nguồn — không cần đụng vào code.
+#  lang: en | ja   (dùng để hiển thị nhãn ngôn ngữ trong email)
+#  enabled: false  -> tạm tắt một nguồn mà không cần xoá
+# =============================================================
+
+settings:
+  timezone: Asia/Tokyo        # Múi giờ dùng để tính "24 giờ qua" và hiển thị ngày
+  window_hours: 24            # Chỉ lấy bài đăng trong N giờ gần nhất
+  max_items_per_feed: 6       # Trần số bài lấy từ mỗi nguồn
+  max_items_per_topic: 15     # Trần số bài mỗi chủ đề trong email
+  summary_length: 180         # Độ dài tối đa phần mô tả ngắn (ký tự)
+  fetch_timeout: 20           # Timeout mỗi request (giây)
+  send_when_empty: false      # true = vẫn gửi mail kể cả khi không có tin mới
+
+# Bộ lọc từ khoá áp dụng cho TOÀN BỘ nguồn (không phân biệt hoa/thường).
+# include rỗng = nhận tất cả. exclude luôn được ưu tiên.
+filters:
+  include: []
+  exclude:
+    - "PR TIMES"
+    - "セール"          # tin khuyến mãi
+    - "Amazonタイムセール"
+    - "sponsored"
+    - "deal of the day"
+
+topics:
+  - name: "AI / Machine Learning"
+    emoji: "🤖"
+    feeds:
+      - name: "TechCrunch AI"
+        url: "https://techcrunch.com/category/artificial-intelligence/feed/"
+        lang: en
+      - name: "The Verge — AI"
+        url: "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml"
+        lang: en
+      - name: "Ars Technica — AI"
+        url: "https://arstechnica.com/ai/feed/"
+        lang: en
+      - name: "VentureBeat AI"
+        url: "https://venturebeat.com/category/ai/feed/"
+        lang: en
+      - name: "MIT Technology Review — AI"
+        url: "https://www.technologyreview.com/topic/artificial-intelligence/feed"
+        lang: en
+      - name: "The Register — AI/ML"
+        url: "https://www.theregister.com/software/ai_ml/headlines.atom"
+        lang: en
+      - name: "Hugging Face Blog"
+        url: "https://huggingface.co/blog/feed.xml"
+        lang: en
+      - name: "Google — The Keyword (AI)"
+        url: "https://blog.google/technology/ai/rss/"
+        lang: en
+      - name: "ITmedia AI＋"
+        url: "https://rss.itmedia.co.jp/rss/2.0/aiplus.xml"
+        lang: ja
+      # Nguồn học thuật — rất nhiều bài mỗi ngày, bật khi cần
+      - name: "arXiv cs.AI"
+        url: "http://export.arxiv.org/rss/cs.AI"
+        lang: en
+        enabled: false
+
+  - name: "Lập trình / Dev"
+    emoji: "💻"
+    feeds:
+      - name: "Hacker News (100+ điểm)"
+        url: "https://hnrss.org/frontpage?points=100"
+        lang: en
+      - name: "GitHub Blog"
+        url: "https://github.blog/feed/"
+        lang: en
+      - name: "Stack Overflow Blog"
+        url: "https://stackoverflow.blog/feed/"
+        lang: en
+      - name: "InfoQ"
+        url: "https://feed.infoq.com/"
+        lang: en
+      - name: "DEV Community"
+        url: "https://dev.to/feed"
+        lang: en
+        enabled: false      # khá nhiều nhiễu, bật nếu bạn thích
+      - name: "Publickey"
+        url: "https://www.publickey1.jp/atom.xml"
+        lang: ja
+      - name: "Zenn"
+        url: "https://zenn.dev/feed"
+        lang: ja
+      - name: "Qiita — bài nổi bật"
+        url: "https://qiita.com/popular-items/feed.atom"
+        lang: ja
+      - name: "はてブ テクノロジー"
+        url: "https://b.hatena.ne.jp/hotentry/it.rss"
+        lang: ja
+      - name: "＠IT"
+        url: "https://rss.itmedia.co.jp/rss/2.0/ait.xml"
+        lang: ja
+
+  - name: "Mobile / Smartphone"
+    emoji: "📱"
+    feeds:
+      - name: "9to5Mac"
+        url: "https://9to5mac.com/feed/"
+        lang: en
+      - name: "9to5Google"
+        url: "https://9to5google.com/feed/"
+        lang: en
+      - name: "Android Authority"
+        url: "https://www.androidauthority.com/feed/"
+        lang: en
+      - name: "GSMArena"
+        url: "https://www.gsmarena.com/rss-news-reviews.php3"
+        lang: en
+      - name: "ITmedia Mobile"
+        url: "https://rss.itmedia.co.jp/rss/2.0/mobile.xml"
+        lang: ja
+      - name: "ケータイ Watch"
+        url: "https://k-tai.watch.impress.co.jp/data/rss/1.0/ktw/feed.rdf"
+        lang: ja
+
+  - name: "Laptop / PC Hardware"
+    emoji: "🖥️"
+    feeds:
+      - name: "Tom's Hardware"
+        url: "https://www.tomshardware.com/feeds/all"
+        lang: en
+      - name: "Engadget"
+        url: "https://www.engadget.com/rss.xml"
+        lang: en
+      - name: "ITmedia PC USER"
+        url: "https://rss.itmedia.co.jp/rss/2.0/pcuser.xml"
+        lang: ja
+      - name: "PC Watch"
+        url: "https://pc.watch.impress.co.jp/data/rss/1.0/pcw/feed.rdf"
+        lang: ja
+      - name: "ITmedia — tin Apple"
+        url: "https://rss.itmedia.co.jp/rss/2.0/kw_apple.xml"
+        lang: ja
+
+  - name: "Công nghệ tổng hợp"
+    emoji: "🌐"
+    feeds:
+      - name: "The Verge"
+        url: "https://www.theverge.com/rss/index.xml"
+        lang: en
+      - name: "TechCrunch"
+        url: "https://techcrunch.com/feed/"
+        lang: en
+      - name: "Ars Technica"
+        url: "https://feeds.arstechnica.com/arstechnica/index"
+        lang: en
+      - name: "WIRED"
+        url: "https://www.wired.com/feed/rss"
+        lang: en
+      - name: "ITmedia NEWS"
+        url: "https://rss.itmedia.co.jp/rss/2.0/news_bursts.xml"
+        lang: ja
+      - name: "GIGAZINE"
+        url: "https://gigazine.net/news/rss_2.0/"
+        lang: ja
+      - name: "Impress Watch"
+        url: "https://www.watch.impress.co.jp/data/rss/1.0/ipw/feed.rdf"
+        lang: ja
+      - name: "ASCII.jp"
+        url: "https://ascii.jp/rss.xml"
+        lang: ja
+      - name: "CNET Japan"
+        url: "https://feeds.japan.cnet.com/rss/cnet/all.rdf"
+        lang: ja

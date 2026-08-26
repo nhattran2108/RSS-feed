@@ -1,0 +1,51 @@
+name: Daily RSS Digest
+
+on:
+  schedule:
+    # 22:00 UTC = 07:00 JST hôm sau. Đổi giờ ở đây nếu bạn muốn nhận sớm/muộn hơn.
+    # Lưu ý: cron của GitHub chạy theo UTC và có thể trễ vài phút khi hệ thống bận.
+    - cron: "0 22 * * *"
+  workflow_dispatch:        # cho phép bấm chạy tay để kiểm thử
+
+# Chỉ cần quyền đọc — workflow này không ghi gì vào repo.
+permissions:
+  contents: read
+
+concurrency:
+  group: daily-digest
+  cancel-in-progress: false
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      # Lưu lịch sử bài đã gửi để không bị trùng giữa các lần chạy.
+      # Cache có thể bị GitHub xoá sau 7 ngày không dùng — script vẫn
+      # hoạt động bình thường nhờ bộ lọc theo cửa sổ thời gian.
+      - name: Khôi phục lịch sử khử trùng lặp
+        uses: actions/cache@v4
+        with:
+          path: .state
+          key: digest-state-${{ github.run_id }}
+          restore-keys: digest-state-
+
+      - name: Gửi bản tin
+        env:
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          MAIL_FROM: ${{ secrets.MAIL_FROM }}
+          MAIL_TO: ${{ secrets.MAIL_TO }}
+        run: python digest.py
